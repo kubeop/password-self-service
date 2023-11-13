@@ -1,0 +1,21 @@
+version: '3.5'
+services:
+  redis:
+    container_name: redis
+    restart: always
+    image: docker.io/library/redis:7.0.12
+    network_mode: host
+    command: redis-server --requirepass a123456 --appendonly yes
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /data/database/redis:/var/lib/redis
+
+  password-self-service:
+    container_name: password-self-service
+    restart: always
+    image: docker.io/kubeop/password-self-service:main
+    network_mode: host
+    command: /usr/local/bin/password-self-service --config=/etc/password-self-service/password-self-service.yaml
+    volumes:
+      - ../../etc/password-self-service.yaml:/etc/password-self-service/password-self-service.yaml

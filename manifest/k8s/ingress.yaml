@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+  labels:
+    app.kubernetes.io/name: password-self-service
+  name: password-self-service
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: password-self-service.kubeop.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: password-self-service
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
