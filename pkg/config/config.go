@@ -1,5 +1,7 @@
 package config
 
+// 配置yaml文件用"-"区分单词, 转为驼峰方便
+
 var (
 	Server = &ServerConfig{}
 	Redis  = &RedisConfig{}
@@ -11,9 +13,9 @@ var (
 type ServerConfig struct {
 	Mode          string  `mapstructure:"mode"`
 	Addr          string  `mapstructure:"addr"`
-	RateLimit     float64 `mapstructure:"rate_limit"`
-	RSAPublicKey  string  `mapstructure:"rsa_public_key"`
-	RSAPrivateKey string  `mapstructure:"rsa_private_key"`
+	RateLimit     float64 `mapstructure:"rate-limit"`
+	RSAPublicKey  string  `mapstructure:"rsa-public-key"`
+	RSAPrivateKey string  `mapstructure:"rsa-private-key"`
 }
 
 // RedisConfig 配置
@@ -31,10 +33,10 @@ type LdapConfig struct {
 	TLS       bool   `mapstructure:"tls"`
 	Username  string `mapstructure:"username"`
 	Password  string `mapstructure:"password"`
-	BaseDn    string `mapstructure:"base_dn"`
+	Base      string `mapstructure:"base"`
 	Filter    string `mapstructure:"filter"`
-	SizeLimit int    `mapstructure:"size_limit"`
-	TimeLimit int    `mapstructure:"time_limit"`
+	SizeLimit int    `mapstructure:"size-limit"`
+	TimeLimit int    `mapstructure:"time-limit"`
 }
 
 // MailConfig 邮箱配置

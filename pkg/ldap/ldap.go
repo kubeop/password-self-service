@@ -28,7 +28,7 @@ type Client struct {
 	TLS       bool   `json:"tls"`
 	Username  string `json:"username"`
 	Password  string `json:"password"`
-	BaseDn    string `json:"baseDn"`
+	Base      string `json:"base"`
 	Filter    string `json:"filter"`
 	TimeLimit int    `json:"timeLimit"`
 	SizeLimit int    `json:"sizeLimit"`
@@ -42,7 +42,7 @@ func NewLdapClient() *Client {
 		TLS:       config.Ldap.TLS,
 		Username:  config.Ldap.Username,
 		Password:  config.Ldap.Password,
-		BaseDn:    config.Ldap.BaseDn,
+		Base:      config.Ldap.Base,
 		Filter:    config.Ldap.Filter,
 		TimeLimit: config.Ldap.TimeLimit,
 		SizeLimit: config.Ldap.SizeLimit,
@@ -73,7 +73,7 @@ func (l *Client) Connect() error {
 }
 
 func (l *Client) Search(username string) (*Attributes, error) {
-	searchRequest := ldap.NewSearchRequest(l.BaseDn,
+	searchRequest := ldap.NewSearchRequest(l.Base,
 		ldap.ScopeWholeSubtree, ldap.DerefAlways, 0, l.TimeLimit, false,
 		fmt.Sprintf(l.Filter, username),
 		[]string{"dn", "displayName", "sAMAccountName", "mail", "mobile", "employeeNumber", "title", "department", "manager", "pwdLastSet"},
