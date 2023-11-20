@@ -1,0 +1,31 @@
+.content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+}
+
+.content-block {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #f8f5f5;
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+.content-block img {
+    width: 100px;
+}
+
+.content-block button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: rgb(26,123,255);
+    border-radius: 10px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
