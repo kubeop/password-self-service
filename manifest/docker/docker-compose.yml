@@ -3,7 +3,7 @@ services:
   redis:
     container_name: redis
     restart: always
-    image: docker.io/library/redis:7.0.12
+    image: registry.cn-hangzhou.aliyuncs.com/devops-system/redis:7.4
     network_mode: host
     command: redis-server --requirepass a123456 --appendonly yes
     environment:
@@ -14,7 +14,7 @@ services:
   password-self-service:
     container_name: password-self-service
     restart: always
-    image: docker.io/kubeop/password-self-service:main
+    image: registry.cn-hangzhou.aliyuncs.com/kubeop/password-self-service:main
     network_mode: host
     command: /usr/local/bin/password-self-service --config=/etc/password-self-service/password-self-service.yaml
     volumes:

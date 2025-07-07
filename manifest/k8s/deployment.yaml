@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: password-self-service
-        image: docker.io/kubeop/password-self-service:main
+        image: registry.cn-hangzhou.aliyuncs.com/kubeop/password-self-service:main
         imagePullPolicy: Always
         args:
           - --config=/etc/password-self-service/password-self-service.yaml

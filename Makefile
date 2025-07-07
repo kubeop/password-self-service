@@ -17,7 +17,7 @@ build:
 init:
 	@echo ">>> generate swag"
 	rm -rf docs
-	~/go/bin/swag init
+	${GOPATH}/bin/swag init
 	go mod tidy
 
 run:
