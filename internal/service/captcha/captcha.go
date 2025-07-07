@@ -4,11 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"password-self-service/pkg/aliyun"
 	"password-self-service/pkg/config"
 	"password-self-service/pkg/gredis"
 	"password-self-service/pkg/ldap"
 	"password-self-service/pkg/logging"
 	"password-self-service/pkg/mail"
+	"password-self-service/pkg/tencent"
 	"time"
 )
 
@@ -41,19 +43,22 @@ func (s *service) SendCaptcha(username, category string) error {
 
 	// 根据category拼接发送主题
 	var title string
-	if category == "password" {
+	switch category {
+	case "password":
 		title = "密码重置"
-	} else if category == "account" {
+	case "account":
 		title = "帐号解锁"
 	}
 
-	subject := fmt.Sprintf("%s-%s-验证码", config.Mail.From, title)
-	content := fmt.Sprintf(`<div>
+	switch config.Setting.Channel.VerifyChannel {
+	case "mail":
+		subject := fmt.Sprintf("%s-%s-验证码", config.Setting.Channel.Mail.From, title)
+		content := fmt.Sprintf(`<div>
         <div>
             %s, 您好!
         </div>
         <div style="padding: 8px 40px 8px 50px;">
-            <p>您的AD域控帐号(%s)正在进行%s, 本次的验证码为 <span style="color: green;">%s</span> ,为了保证账号安全，验证码有效期为<span style="color: orange;">5分钟</span>。</p>
+            <p>您的域控帐号(%s)正在进行%s, 本次的验证码为 <span style="color: green;">%s</span> ,为了保证账号安全，验证码有效期为<span style="color: orange;">5分钟</span>。</p>
             <p>请确认为本人操作，切勿向他人泄露，感谢您的理解与使用。</p>
         </div>
         <div>
@@ -61,13 +66,27 @@ func (s *service) SendCaptcha(username, category string) error {
         </div>
     </div>`, user.Nickname, user.Username, title, code)
 
-	// 发送验证码消息
-	err = mail.SendMail([]string{user.Email}, subject, content)
-	if err != nil {
-		return err
+		// 发送验证码消息
+		err = mail.SendMail([]string{user.Email}, subject, content)
+		if err != nil {
+			logging.Logger().Sugar().Errorf("用户 %s 使用 %s 方式发送 %s 验证码失败，错误信息：%v", user.Username, config.Setting.Channel.VerifyChannel, title, err)
+			return err
+		}
+	case "aliyunsms":
+		if err := aliyun.SendAliyunSMS(code, user.Mobile, config.Setting.Channel.AliyunSms.TemplateCodeVerify); err != nil {
+			logging.Logger().Sugar().Errorf("用户 %s 使用 %s 方式发送 %s 验证码失败，错误信息：%v", user.Username, config.Setting.Channel.VerifyChannel, title, err)
+			return err
+		}
+	case "tencentsms":
+		if err := tencent.SendTencentSMS(code, user.Mobile, config.Setting.Channel.TencentSms.TemplateCodeVerify); err != nil {
+			logging.Logger().Sugar().Errorf("用户 %s 使用 %s 方式发送 %s 验证码失败，错误信息：%v", user.Username, config.Setting.Channel.ExpiredChannel, title, err)
+			return err
+		}
+	default:
+		return errors.New("不支持的消息通知通道")
 	}
 
-	logging.Logger().Sugar().Infof("用户%v进行%v发送了验证码.", user.Username, title)
+	logging.Logger().Sugar().Infof("用户 %s 使用 %s 方式发送 %s 验证码成功.", user.Username, config.Setting.Channel.VerifyChannel, title)
 
 	return nil
 }

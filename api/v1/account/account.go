@@ -13,7 +13,7 @@ var Handler handler
 
 type handler struct{}
 
-// unlockAccountRequest 解锁AD用户结构体
+// unlockAccountRequest 解锁用户结构体
 type unlockAccountRequest struct {
 	Username string `json:"username" bind:"username" binding:"required,min=2,max=20"` // 用户名
 	Code     string `json:"code" bind:"code" binding:"required"`                      // 验证码
@@ -48,5 +48,5 @@ func (h *handler) UnlockAccount(c *gin.Context) {
 		return
 	}
 
-	response.Json(c, http.StatusCreated, "解锁AD用户成功", nil)
+	response.Json(c, http.StatusCreated, "解锁用户成功", nil)
 }

@@ -2,12 +2,6 @@ package router
 
 import (
 	"net/http"
-	"password-self-service/api/v1/account"
-	"password-self-service/api/v1/captcha"
-	"password-self-service/api/v1/password"
-	"password-self-service/docs"
-	"password-self-service/internal/middleware"
-	"password-self-service/pkg/config"
 	"time"
 
 	"github.com/didip/tollbooth"
@@ -15,12 +9,20 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+
+	"password-self-service/api/v1/account"
+	"password-self-service/api/v1/captcha"
+	"password-self-service/api/v1/password"
+	"password-self-service/docs"
+	"password-self-service/internal/middleware"
+	"password-self-service/pkg/config"
+	"password-self-service/views"
 )
 
 // InitRouter 初始化路由
 func InitRouter() *gin.Engine {
 	//设置模式
-	gin.SetMode(config.Server.Mode)
+	gin.SetMode(config.Setting.Server.Mode)
 
 	// 创建带有默认中间件的路由:
 	// 日志与恢复中间件
@@ -30,12 +32,15 @@ func InitRouter() *gin.Engine {
 	server.Use(middleware.AllowCors())
 
 	// 创建限速器
-	limiter := tollbooth.NewLimiter(config.Server.RateLimit, &limiter.ExpirableOptions{
+	limiter := tollbooth.NewLimiter(config.Setting.Server.RateLimit, &limiter.ExpirableOptions{
 		DefaultExpirationTTL: time.Second,
 	})
 
 	// 使用Gin限速中间件
 	server.Use(middleware.LimitHandler(limiter))
+
+	// 静态页面
+	server.NoRoute(gin.WrapH(http.FileServer(http.FS(views.StaticAsset))))
 
 	// 路由分组
 	apiGroup := server.Group("/")
@@ -48,7 +53,9 @@ func InitRouter() *gin.Engine {
 
 // InitAPIV0 基础接口
 func InitAPIV0(r *gin.RouterGroup) {
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	if config.Setting.Server.Mode == "debug" {
+		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
 	r.GET("health", func(ctx *gin.Context) { ctx.String(http.StatusOK, "ok") })
 }
 

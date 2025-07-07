@@ -18,7 +18,6 @@ init:
 	@echo ">>> generate swag"
 	rm -rf docs
 	~/go/bin/swag init
-	~/go/bin/swag fmt
 	go mod tidy
 
 run:

@@ -12,14 +12,12 @@ import (
 )
 
 type Attributes struct {
-	Username   string `json:"username"`   // 用户名
-	Nickname   string `json:"nickname"`   // 昵称
-	Email      string `json:"email"`      // 邮箱
-	Mobile     string `json:"mobile"`     // 手机
-	JobNum     string `json:"jobNum"`     // 工号
-	Position   string `json:"position"`   // 岗位
-	Department string `json:"department"` // 部门
-	DN         string `json:"dn"`         // 用户DN
+	Username       string `json:"username"`       // 用户名
+	Nickname       string `json:"nickname"`       // 昵称
+	Email          string `json:"email"`          // 邮箱
+	Mobile         string `json:"mobile"`         // 手机
+	DN             string `json:"dn"`             // 用户DN
+	PasswordExpire string `json:"passwordExpire"` // 密码过期时间
 }
 
 type Client struct {
@@ -37,15 +35,15 @@ type Client struct {
 
 func NewLdapClient() *Client {
 	return &Client{
-		Host:      config.Ldap.Host,
-		Port:      config.Ldap.Port,
-		TLS:       config.Ldap.TLS,
-		Username:  config.Ldap.Username,
-		Password:  config.Ldap.Password,
-		Base:      config.Ldap.Base,
-		Filter:    config.Ldap.Filter,
-		TimeLimit: config.Ldap.TimeLimit,
-		SizeLimit: config.Ldap.SizeLimit,
+		Host:      config.Setting.Ldap.Host,
+		Port:      config.Setting.Ldap.Port,
+		TLS:       config.Setting.Ldap.TLS,
+		Username:  config.Setting.Ldap.Username,
+		Password:  config.Setting.Ldap.Password,
+		Base:      config.Setting.Ldap.Base,
+		Filter:    config.Setting.Ldap.Filter,
+		TimeLimit: config.Setting.Ldap.TimeLimit,
+		SizeLimit: config.Setting.Ldap.SizeLimit,
 	}
 }
 
@@ -73,6 +71,7 @@ func (l *Client) Connect() error {
 }
 
 func (l *Client) Search(username string) (*Attributes, error) {
+	defer l.Conn.Close()
 	searchRequest := ldap.NewSearchRequest(l.Base,
 		ldap.ScopeWholeSubtree, ldap.DerefAlways, 0, l.TimeLimit, false,
 		fmt.Sprintf(l.Filter, username),
@@ -89,14 +88,11 @@ func (l *Client) Search(username string) (*Attributes, error) {
 	}
 
 	user := &Attributes{
-		Username:   sr.Entries[0].GetAttributeValue("sAMAccountName"),
-		Nickname:   sr.Entries[0].GetAttributeValue("displayName"),
-		Email:      sr.Entries[0].GetAttributeValue("mail"),
-		Mobile:     sr.Entries[0].GetAttributeValue("mobile"),
-		JobNum:     sr.Entries[0].GetAttributeValue("employeeNumber"),
-		Position:   sr.Entries[0].GetAttributeValue("title"),
-		Department: sr.Entries[0].GetAttributeValue("department"),
-		DN:         sr.Entries[0].DN,
+		Username: sr.Entries[0].GetAttributeValue("sAMAccountName"),
+		Nickname: sr.Entries[0].GetAttributeValue("displayName"),
+		Email:    sr.Entries[0].GetAttributeValue("mail"),
+		Mobile:   sr.Entries[0].GetAttributeValue("mobile"),
+		DN:       sr.Entries[0].DN,
 	}
 
 	return user, err
@@ -117,6 +113,7 @@ func (l *Client) Login(username, password string) error {
 }
 
 func (l *Client) ModifyPassword(userDn, newPassword string) error {
+	defer l.Conn.Close()
 	utf16 := unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM)
 	// The password needs to be enclosed in quotes
 	pwdEncoded, err := utf16.NewEncoder().String(fmt.Sprintf("\"%s\"", newPassword))
@@ -137,6 +134,7 @@ func (l *Client) ModifyPassword(userDn, newPassword string) error {
 }
 
 func (l *Client) UnlockAccount(userDn string) error {
+	defer l.Conn.Close()
 	modifyReq := ldap.NewModifyRequest(userDn, nil)
 	modifyReq.Replace("lockoutTime", []string{"0"})
 
@@ -146,4 +144,40 @@ func (l *Client) UnlockAccount(userDn string) error {
 	}
 
 	return nil
+}
+
+func (l *Client) CheckPasswordExpired() ([]*Attributes, error) {
+	// 过滤掉设置密码永不过期，用户状态异常的用户
+	//filter := "(sAMAccountName=san.zhang)"
+	filter := "(&(objectCategory=person)(!(pwdLastSet=0))(!(userAccountControl:1.2.840.113556.1.4.803:=65536))(!(userAccountControl:1.2.840.113556.1.4.803:=2))(!(userAccountControl:1.2.840.113556.1.4.803:=8388608)))"
+
+	searchRequest := ldap.NewSearchRequest(l.Base,
+		ldap.ScopeWholeSubtree, ldap.DerefAlways, 0, l.TimeLimit, false,
+		filter,
+		[]string{"dn", "displayName", "sAMAccountName", "mail", "mobile", "employeeNumber", "title", "department", "manager", "pwdLastSet"},
+		nil)
+
+	sr, err := l.Conn.SearchWithPaging(searchRequest, uint32(l.SizeLimit))
+	if err != nil {
+		return nil, err
+	}
+
+	if len(sr.Entries) == 0 {
+		return nil, errors.New("user does not exist")
+	}
+
+	user := make([]*Attributes, 0)
+	for _, u := range sr.Entries {
+		user = append(user, &Attributes{
+			Username:       u.GetAttributeValue("sAMAccountName"),
+			Nickname:       u.GetAttributeValue("displayName"),
+			Email:          u.GetAttributeValue("mail"),
+			Mobile:         u.GetAttributeValue("mobile"),
+			DN:             sr.Entries[0].DN,
+			PasswordExpire: u.GetAttributeValue("pwdLastSet"),
+		})
+	}
+
+	defer l.Conn.Close()
+	return user, err
 }

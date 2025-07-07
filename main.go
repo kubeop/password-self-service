@@ -1,13 +1,15 @@
 /*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
+Copyright © 2023 Sonic Ma <EMAIL sonic.ma@outlook.com>
 */
 package main
 
-import "password-self-service/internal/cmd"
+import (
+	"password-self-service/internal/cmd"
+)
 
 // @title						Swagger API
 // @version					1.0
-// @description				AD密码自助平台
+// @description				密码自助平台
 // @securityDefinitions.apikey	BearerToken
 // @in							header
 // @name						Authorization

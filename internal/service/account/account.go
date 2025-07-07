@@ -33,7 +33,7 @@ func (s *service) UnlockAccount(username, code string) error {
 
 	gredis.Client.Del(gredis.Ctx, fmt.Sprintf("%s:%s", "account", user.Username))
 
-	logging.Logger().Sugar().Infof("用户%v解锁账号成功.", user.Username)
+	logging.Logger().Sugar().Infof("用户 %v 解锁账号成功.", user.Username)
 
 	return nil
 }

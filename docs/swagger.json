@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "AD密码自助平台",
+        "description": "密码自助平台",
         "title": "Swagger API",
         "contact": {},
         "version": "1.0"

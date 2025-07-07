@@ -1,5 +1,5 @@
 /*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
+Copyright © 2023 Sonic Ma <EMAIL sonic.ma@outlook.com>
 */
 package cmd
 
@@ -15,6 +15,7 @@ import (
 	"password-self-service/pkg/config"
 	"password-self-service/pkg/gredis"
 	"password-self-service/pkg/logging"
+	"password-self-service/pkg/tasks"
 	"syscall"
 	"time"
 
@@ -27,18 +28,19 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "password-self-service",
-	Short: "AD域控账号密码自助平台",
+	Short: "密码自助平台",
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		logging.Init()
 		gredis.Init()
+		tasks.Init()
 
 		// 注册所有路由
 		routers := router.InitRouter()
 
 		srv := &http.Server{
-			Addr:    config.Server.Addr,
+			Addr:    config.Setting.Server.Addr,
 			Handler: routers,
 		}
 
@@ -51,7 +53,7 @@ var rootCmd = &cobra.Command{
 			}
 		}()
 
-		logging.Logger().Sugar().Infof("Starting server on %v, Pid is %v", config.Server.Addr, syscall.Getpid())
+		logging.Logger().Sugar().Infof("Starting server on %v, Pid is %v", config.Setting.Server.Addr, syscall.Getpid())
 
 		// 等待中断信号以优雅地关闭服务器（设置 5 秒的超时时间）
 		quit := make(chan os.Signal, 1)
@@ -119,19 +121,8 @@ func initConfig() {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
 
-	if err := viper.UnmarshalKey("server", config.Server); err != nil {
-		log.Fatalf("Fail to parse 'server': %v", err)
+	if err := viper.Unmarshal(&config.Setting); err != nil {
+		log.Fatalf("Fail to parse config: %v", err)
 	}
 
-	if err := viper.UnmarshalKey("redis", config.Redis); err != nil {
-		log.Fatalf("Fail to parse 'redis': %v", err)
-	}
-
-	if err := viper.UnmarshalKey("ldap", config.Ldap); err != nil {
-		log.Fatalf("Fail to parse 'ldap': %v", err)
-	}
-
-	if err := viper.UnmarshalKey("mail", config.Mail); err != nil {
-		log.Fatalf("Fail to parse 'mail': %v", err)
-	}
 }

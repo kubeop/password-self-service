@@ -39,8 +39,8 @@ func ReadFile(keyFile string) ([]byte, error) {
 
 // ReadRSAKey 读取公私钥文件
 func ReadRSAKey() {
-	publicKey, _ = ReadFile(config.Server.RSAPublicKey)
-	privateKey, _ = ReadFile(config.Server.RSAPrivateKey)
+	publicKey, _ = ReadFile(config.Setting.Server.RSAPublicKey)
+	privateKey, _ = ReadFile(config.Setting.Server.RSAPrivateKey)
 }
 
 // Encrypt Rsa加密

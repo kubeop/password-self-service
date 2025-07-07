@@ -1,0 +1,143 @@
+:root {
+    --primary-color: #4a6cf7;
+    --secondary-color: #f5f7ff;
+    --text-color: #333333;
+    --light-gray: #f0f2f5;
+    --border-radius: 8px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+h1 {
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    font-size: 2.2rem;
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    width: 350px;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.card p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+/* 验证码按钮样式 */
+#sendCodeBtn {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+button:hover {
+    background-color: #3a5bdf;
+}
+
+/* Form styles */
+.form-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.error-message {
+    color: #e53e3e;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.success-message {
+    color: #38a169;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}

@@ -10,16 +10,32 @@ password-self-service 是一个基于[Gin](https://gin-gonic.com)开发的基于
 
 
 
-# 3. 部署服务
+# 3. 功能
+
+- [x] 重置密码
+- [x] 解锁账户
+- [x] 密码过期通知
+- [x] 支持邮件方式发送消息
+- [x] 支持阿里云短信方式发送消息
+- [x] 支持腾讯云短信方式发送消息
+- [ ] 支持钉钉应用方式发送消息
+- [ ] 支持企业微信方式发送消息
+
+
+
+# 4. 部署服务
 
 使用[docker-compose](manifest/docker/docker-compose.yml)部署。
 
 使用[kubernetes](manifest/k8s)部署。
 
 
-# 4. 二次开发
+# 5. 二次开发
 
-```
+```shell
+# 拉取代码
+git clone https://github.com/kubeop/password-self-service.git
+
 # 安装swag
 go install github.com/swaggo/swag/cmd/swag@latest
 

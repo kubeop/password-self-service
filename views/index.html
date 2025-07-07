@@ -3,11 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AD密码自助平台</title>
+    <title>密码自助平台</title>
     <script type="module" crossorigin src="assets/js/index.js"></script>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <div id="root"></div>
+    <div id="root">
+        <div class="container">
+            <h1>密码自助平台</h1>
+            <div class="card-container">
+                <div class="card">
+                    <h2>重置密码</h2>
+                    <p>忘记密码？通过验证码重置您的密码</p>
+                    <button onclick="window.location.href='reset_password.html'">立即重置</button>
+                </div>
+                <div class="card">
+                    <h2>解锁账户</h2>
+                    <p>账户被锁定？通过验证码解锁您的账户</p>
+                    <button onclick="window.location.href='unlock_account.html'">立即解锁</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -2,11 +2,12 @@ package captcha
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"password-self-service/internal/service/captcha"
 	"password-self-service/pkg/response"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 var Handler handler

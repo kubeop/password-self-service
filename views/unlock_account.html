@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>解锁账户 - 密码自助平台</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>解锁账户</h1>
+            <form id="unlockAccountForm">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" required minlength="2" maxlength="20">
+                    <div class="error-message" id="usernameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="code">验证码</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="code" name="code" required>
+                        <button type="button" id="sendCodeBtn" style="width: auto;">获取验证码</button>
+                    </div>
+                    <div class="error-message" id="codeError"></div>
+                </div>
+                <button type="submit">解锁账户</button>
+                <div class="success-message" id="successMessage"></div>
+            </form>
+            <a href="index.html" class="back-link">返回首页</a>
+        </div>
+    </div>
+    <script src="assets/js/unlock_account.js"></script>
+</body>
+</html>

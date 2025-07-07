@@ -2,12 +2,15 @@ package config
 
 // 配置yaml文件用"-"区分单词, 转为驼峰方便
 
-var (
-	Server = &ServerConfig{}
-	Redis  = &RedisConfig{}
-	Ldap   = &LdapConfig{}
-	Mail   = &MailConfig{}
-)
+var Setting Config
+
+type Config struct {
+	Server  ServerConfig  `mapstructure:"server"`
+	Redis   RedisConfig   `mapstructure:"redis"`
+	Ldap    LdapConfig    `mapstructure:"ldap"`
+	Cron    CronConfig    `mapstructure:"cron"`
+	Channel ChannelConfig `mapstructure:"channel"`
+}
 
 // ServerConfig 配置
 type ServerConfig struct {
@@ -39,6 +42,21 @@ type LdapConfig struct {
 	TimeLimit int    `mapstructure:"time-limit"`
 }
 
+// CronConfig 定时任务配置
+type CronConfig struct {
+	Enabled  bool   `mapstructure:"enabled"`
+	Schedule string `mapstructure:"schedule"`
+}
+
+type ChannelConfig struct {
+	PlatformUrl    string     `mapstructure:"platform-url"`
+	VerifyChannel  string     `mapstructure:"verify-channel"`
+	ExpiredChannel string     `mapstructure:"expired-channel"`
+	Mail           MailConfig `mapstructure:"mail"`
+	AliyunSms      AliyunSms  `mapstructure:"aliyunsms"`
+	TencentSms     TencentSms `mapstructure:"tencentsms"`
+}
+
 // MailConfig 邮箱配置
 type MailConfig struct {
 	Host     string `mapstructure:"host"`
@@ -47,4 +65,22 @@ type MailConfig struct {
 	User     string `mapstructure:"user"`
 	Password string `mapstructure:"password"`
 	From     string `mapstructure:"from"`
+}
+
+type AliyunSms struct {
+	AccessKeyId         string `mapstructure:"access-key-id"`
+	AccessKeySecret     string `mapstructure:"access-key-secret"`
+	SignName            string `mapstructure:"sign-name"`
+	TemplateCodeVerify  string `mapstructure:"template-code-verify"`
+	TemplateCodeExpired string `mapstructure:"template-code-expired"`
+}
+
+type TencentSms struct {
+	AccessKeyId         string `mapstructure:"access-key-id"`
+	AccessKeySecret     string `mapstructure:"access-key-secret"`
+	SignName            string `mapstructure:"sign-name"`
+	Region              string `mapstructure:"region"`
+	AppId               string `mapstructure:"app-id"`
+	TemplateCodeVerify  string `mapstructure:"template-code-verify"`
+	TemplateCodeExpired string `mapstructure:"template-code-expired"`
 }
