@@ -29,11 +29,3 @@ clean:
 	rm -rf $(APP_NAME)
 	go clean -i .
 	rm -rf $(APP_NAME) go.mod go.sum docs vendor $(APP_NAME).pid
-
-docker-build:
-	@echo ">>> build docker image"
-	docker build -t kubeop/$(APP_NAME):$(VERSION) .
-
-docker-push:
-	@echo ">>> push docker image"
-	docker push kubeop/$(APP_NAME):$(VERSION)
