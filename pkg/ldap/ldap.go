@@ -154,7 +154,7 @@ func (l *Client) CheckPasswordExpired() ([]*Attributes, error) {
 	searchRequest := ldap.NewSearchRequest(l.Base,
 		ldap.ScopeWholeSubtree, ldap.DerefAlways, 0, l.TimeLimit, false,
 		filter,
-		[]string{"dn", "displayName", "sAMAccountName", "mail", "mobile", "employeeNumber", "title", "department", "manager", "pwdLastSet"},
+		[]string{"dn", "displayName", "sAMAccountName", "mail", "mobile", "pwdLastSet"},
 		nil)
 
 	sr, err := l.Conn.SearchWithPaging(searchRequest, uint32(l.SizeLimit))

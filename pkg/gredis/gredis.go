@@ -27,7 +27,7 @@ func Init() {
 
 	pong, err := client.Ping(Ctx).Result()
 	if err != nil {
-		logging.Logger().Sugar().Error("Redis connect failed, err: %v", err)
+		logging.Logger().Sugar().Fatalf("Redis connect failed, err: %v", err)
 	} else {
 		logging.Logger().Sugar().Infof("Redis connected %s DB: %d, response %v.", address, config.Setting.Redis.DB, pong)
 		Client = client
