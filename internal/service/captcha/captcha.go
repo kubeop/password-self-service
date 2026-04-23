@@ -25,6 +25,7 @@ func (s *service) SendCaptcha(username, category string) error {
 	if err != nil {
 		return err
 	}
+	defer client.Conn.Close()
 
 	user, err := client.Search(username)
 	if err != nil {
@@ -79,7 +80,7 @@ func (s *service) SendCaptcha(username, category string) error {
 		}
 	case "tencentsms":
 		if err := tencent.SendTencentSMS(code, user.Mobile, config.Setting.Channel.TencentSms.TemplateCodeVerify); err != nil {
-			logging.Logger().Sugar().Errorf("用户 %s 使用 %s 方式发送 %s 验证码失败，错误信息：%v", user.Username, config.Setting.Channel.ExpiredChannel, title, err)
+			logging.Logger().Sugar().Errorf("用户 %s 使用 %s 方式发送 %s 验证码失败，错误信息：%v", user.Username, config.Setting.Channel.VerifyChannel, title, err)
 			return err
 		}
 	default:

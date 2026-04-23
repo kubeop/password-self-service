@@ -173,7 +173,7 @@ func (l *Client) CheckPasswordExpired() ([]*Attributes, error) {
 			Nickname:       u.GetAttributeValue("displayName"),
 			Email:          u.GetAttributeValue("mail"),
 			Mobile:         u.GetAttributeValue("mobile"),
-			DN:             sr.Entries[0].DN,
+			DN:             u.DN,
 			PasswordExpire: u.GetAttributeValue("pwdLastSet"),
 		})
 	}

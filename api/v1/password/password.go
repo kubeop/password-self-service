@@ -42,7 +42,8 @@ func (h *handler) ResetPassword(c *gin.Context) {
 
 	// // RSA 解密
 	// rsa.ReadRSAKey()
-	// plainText, err := rsa.Decrypt(req.NewPassword)
+	// plainTextUsername, err := rsa.Decrypt(req.Username)
+	// plainTextPassword, err := rsa.Decrypt(req.NewPassword)
 	// if err != nil {
 	// 	response.JsonExit(c, http.StatusInternalServerError, err.Error(), nil)
 	// 	return

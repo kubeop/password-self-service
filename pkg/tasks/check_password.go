@@ -15,13 +15,9 @@ var (
 )
 
 func Init() {
-	cron := gcron.New()
-
 	if config.Setting.Cron.Enabled {
 		CheckPasswordExpired()
-		cron.Start("CheckPasswordExpired")
 	}
-
 }
 
 func CheckPasswordExpired() {
