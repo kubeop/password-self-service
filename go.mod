@@ -5,10 +5,11 @@ go 1.22
 toolchain go1.24.2
 
 require (
-	github.com/alibabacloud-go/darabonba-openapi/v2 v2.1.7
+	github.com/alibabacloud-go/darabonba-openapi/v2 v2.1.14
 	github.com/alibabacloud-go/dysmsapi-20170525/v5 v5.1.2
+	github.com/alibabacloud-go/dyvmsapi-20170525/v6 v6.0.0
 	github.com/alibabacloud-go/openapi-util v0.1.1
-	github.com/alibabacloud-go/tea v1.3.9
+	github.com/alibabacloud-go/tea v1.3.13
 	github.com/alibabacloud-go/tea-utils/v2 v2.0.7
 	github.com/aliyun/credentials-go v1.4.6
 	github.com/gin-gonic/gin v1.9.1
@@ -17,8 +18,9 @@ require (
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.2
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1202
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.0
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.1200
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vms v1.1.0
 )
 
 require (

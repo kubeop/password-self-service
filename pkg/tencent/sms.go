@@ -68,5 +68,6 @@ func SendTencentSMS(code, mobile, templateCode string) error {
 	}
 
 	logging.Logger().Sugar().Infof("发送消息请求状态: %v, 消息发送状态: %v, 消息发送回执ID: %v", gconv.String(response.Response.SendStatusSet[0].Code), gconv.String(response.Response.SendStatusSet[0].Message), gconv.String(response.Response.SendStatusSet[0].SerialNo))
+
 	return nil
 }

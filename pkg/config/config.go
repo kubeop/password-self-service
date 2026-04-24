@@ -31,15 +31,26 @@ type RedisConfig struct {
 
 // LdapConfig 配置
 type LdapConfig struct {
-	Host      string `mapstructure:"host"`
-	Port      int    `mapstructure:"port"`
-	TLS       bool   `mapstructure:"tls"`
-	Username  string `mapstructure:"username"`
-	Password  string `mapstructure:"password"`
-	Base      string `mapstructure:"base"`
-	Filter    string `mapstructure:"filter"`
-	SizeLimit int    `mapstructure:"size-limit"`
-	TimeLimit int    `mapstructure:"time-limit"`
+	Type      string      `mapstructure:"type"`
+	Host      string      `mapstructure:"host"`
+	Port      int         `mapstructure:"port"`
+	TLS       bool        `mapstructure:"tls"`
+	Username  string      `mapstructure:"username"`
+	Password  string      `mapstructure:"password"`
+	Base      string      `mapstructure:"base"`
+	Filter    string      `mapstructure:"filter"`
+	Mapping   LdapMapping `mapstructure:"mapping"`
+	SizeLimit int         `mapstructure:"size-limit"`
+	TimeLimit int         `mapstructure:"time-limit"`
+}
+
+type LdapMapping struct {
+	Username        string `mapstructure:"username"`
+	Nickname        string `mapstructure:"nickname"`
+	Email           string `mapstructure:"email"`
+	Mobile          string `mapstructure:"mobile"`
+	Password        string `mapstructure:"password"`
+	PasswordExpired string `mapstructure:"password-expired"`
 }
 
 // CronConfig 定时任务配置
@@ -49,12 +60,13 @@ type CronConfig struct {
 }
 
 type ChannelConfig struct {
-	PlatformUrl    string     `mapstructure:"platform-url"`
-	VerifyChannel  string     `mapstructure:"verify-channel"`
-	ExpiredChannel string     `mapstructure:"expired-channel"`
-	Mail           MailConfig `mapstructure:"mail"`
-	AliyunSms      AliyunSms  `mapstructure:"aliyunsms"`
-	TencentSms     TencentSms `mapstructure:"tencentsms"`
+	PlatformUrl    string      `mapstructure:"platform-url"`
+	VerifyChannel  string      `mapstructure:"verify-channel"`
+	ExpiredChannel string      `mapstructure:"expired-channel"`
+	Mail           MailConfig  `mapstructure:"mail"`
+	AliyunSms      AliyunSms   `mapstructure:"aliyunsms"`
+	AliyunVoice    AliyunVoice `mapstructure:"aliyunvoice"`
+	TencentSms     TencentSms  `mapstructure:"tencentsms"`
 }
 
 // MailConfig 邮箱配置
@@ -71,6 +83,14 @@ type AliyunSms struct {
 	AccessKeyId         string `mapstructure:"access-key-id"`
 	AccessKeySecret     string `mapstructure:"access-key-secret"`
 	SignName            string `mapstructure:"sign-name"`
+	TemplateCodeVerify  string `mapstructure:"template-code-verify"`
+	TemplateCodeExpired string `mapstructure:"template-code-expired"`
+}
+
+type AliyunVoice struct {
+	AccessKeyId         string `mapstructure:"access-key-id"`
+	AccessKeySecret     string `mapstructure:"access-key-secret"`
+	ShowNumber          string `mapstructure:"show-number"`
 	TemplateCodeVerify  string `mapstructure:"template-code-verify"`
 	TemplateCodeExpired string `mapstructure:"template-code-expired"`
 }

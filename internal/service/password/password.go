@@ -101,6 +101,10 @@ func (s *service) PasswordExpired() error {
 					if err := aliyun.SendAliyunSMS(utils.FormatTime(expireTime), user.Mobile, config.Setting.Channel.AliyunSms.TemplateCodeExpired); err != nil {
 						logging.Logger().Sugar().Errorf("用户 %s 的密码过期通知使用 %s 方式发送失败，错误信息：%v", user.Username, config.Setting.Channel.ExpiredChannel, err)
 					}
+				case "aliyunvoice":
+					if err := aliyun.SendAliyunVoice(utils.FormatTime(expireTime), user.Mobile, config.Setting.Channel.AliyunVoice.TemplateCodeExpired, config.Setting.Channel.AliyunVoice.ShowNumber); err != nil {
+						logging.Logger().Sugar().Errorf("用户 %s 的密码过期通知使用 %s 方式发送失败，错误信息：%v", user.Username, config.Setting.Channel.ExpiredChannel, err)
+					}
 				case "tencentsms":
 					if err := tencent.SendTencentSMS(utils.FormatTime(expireTime), user.Mobile, config.Setting.Channel.TencentSms.TemplateCodeExpired); err != nil {
 						logging.Logger().Sugar().Errorf("用户 %s 的密码过期通知使用 %s 方式发送失败，错误信息：%v", user.Username, config.Setting.Channel.ExpiredChannel, err)
