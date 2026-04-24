@@ -20,7 +20,6 @@ require (
 	github.com/swaggo/swag v1.16.2
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.1.0
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.1200
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vms v1.1.0
 )
 
 require (
